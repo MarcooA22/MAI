@@ -2,7 +2,7 @@ import { useTheme } from './hooks/useTheme'
 import { useLanguage } from './hooks/useLanguage'
 import { Navbar } from './components/Navbar'
 import { Hero } from './components/Hero'
-import { ProcessToggle } from './components/ProcessToggle'
+import { AutomationDemo } from './components/AutomationDemo'
 import { UseCases } from './components/UseCases'
 import { MoreThanExamples } from './components/MoreThanExamples'
 import { HowWeWork } from './components/HowWeWork'
@@ -21,7 +21,7 @@ export default function App() {
       <Navbar lang={lang} toggleLang={toggleLang} theme={theme} toggleTheme={toggleTheme} />
       <main>
         <Hero lang={lang} />
-        <ProcessToggle lang={lang} />
+        <AutomationDemo lang={lang} />
         <UseCases lang={lang} />
         <MoreThanExamples lang={lang} />
         <HowWeWork lang={lang} />
