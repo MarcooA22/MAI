@@ -16,7 +16,6 @@ type Props = {
 const navLinks = [
   { labelKey: 'home' as const, href: 'inicio' },
   { labelKey: 'howItWorks' as const, href: 'como-funciona' },
-  { labelKey: 'useCases' as const, href: 'casos' },
   { labelKey: 'diagnosis' as const, href: 'contacto' },
 ]
 

@@ -1,9 +1,8 @@
 import { useTheme } from './hooks/useTheme'
 import { useLanguage } from './hooks/useLanguage'
 import { Navbar } from './components/Navbar'
-import { Hero } from './components/Hero'
+import { HeroSequence } from './components/HeroSequence'
 import { AutomationDemo } from './components/AutomationDemo'
-import { UseCases } from './components/UseCases'
 import { MoreThanExamples } from './components/MoreThanExamples'
 import { HowWeWork } from './components/HowWeWork'
 import { WhyMAI } from './components/WhyMAI'
@@ -20,9 +19,8 @@ export default function App() {
     <div className={theme}>
       <Navbar lang={lang} toggleLang={toggleLang} theme={theme} toggleTheme={toggleTheme} />
       <main>
-        <Hero lang={lang} />
+        <HeroSequence lang={lang} />
         <AutomationDemo lang={lang} />
-        <UseCases lang={lang} />
         <MoreThanExamples lang={lang} />
         <HowWeWork lang={lang} />
         <WhyMAI lang={lang} />
