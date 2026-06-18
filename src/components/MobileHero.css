@@ -1,0 +1,213 @@
+/* ───────────────────────────────────────────────────────────────────────
+   MobileHero — hero propio para celular (≤768px).
+   Sistema modular reconfigurable. Todo HTML/CSS/SVG, sin assets del desktop.
+   ─────────────────────────────────────────────────────────────────────── */
+
+.mobile-hero {
+  position: relative;
+  width: 100%;
+  min-height: 94vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 26px 20px 30px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(47, 128, 255, 0.22), transparent 44%),
+    radial-gradient(circle at 86% 84%, rgba(124, 58, 237, 0.18), transparent 42%),
+    #05060A;
+}
+
+/* Grilla técnica de fondo, sutil y enmascarada */
+.mobile-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(circle at 50% 60%, black, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at 50% 60%, black, transparent 80%);
+}
+
+/* ── Texto ───────────────────────────────────────────────────────────── */
+.mh-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 440px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.mh-title {
+  margin: 0;
+  font-size: clamp(2rem, 8.6vw, 2.55rem);
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #FFFFFF;
+  text-shadow: 0 2px 28px rgba(0, 0, 0, 0.5);
+}
+
+.mh-subtitle {
+  margin: 0;
+  font-size: clamp(1rem, 4.1vw, 1.1rem);
+  line-height: 1.5;
+  font-weight: 400;
+  max-width: 31ch;
+  color: rgba(255, 255, 255, 0.88);
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.4);
+}
+
+.mh-cta {
+  margin-top: 3px;
+  min-height: 52px;
+  padding: 14px 30px;
+  border: none;
+  border-radius: 14px;
+  font-size: 1.03rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  cursor: pointer;
+  background: linear-gradient(135deg, #2F80FF, #00C2FF, #7C3AED);
+  box-shadow: 0 0 28px rgba(47, 128, 255, 0.5);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.mh-cta:active { transform: scale(0.98); }
+.mh-cta:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 3px; }
+
+/* ── Stage del sistema modular ───────────────────────────────────────── */
+.mobile-hero-system {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 360px;
+  height: clamp(330px, 50vh, 380px);
+  margin: 18px auto 0;
+}
+
+.mh-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.mh-link {
+  fill: none;
+  stroke: url(#mhLink);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.mh-pulse {
+  fill: #00C2FF;
+  filter: drop-shadow(0 0 6px rgba(0, 194, 255, 0.9));
+}
+
+/* ── Piezas ──────────────────────────────────────────────────────────── */
+.mh-tile {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+  border-radius: 13px;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+.mh-tile.lg {
+  width: 62px;
+  height: 62px;
+  margin: -31px 0 0 -31px;
+  border-radius: 16px;
+}
+
+/* Pieza activa: glow azul de acento */
+.mh-tile[data-active="true"] {
+  border-color: rgba(47, 128, 255, 0.65);
+  box-shadow:
+    0 8px 26px rgba(0, 0, 0, 0.45),
+    0 0 22px rgba(47, 128, 255, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+/* Glyph del componente + float idle sutil */
+.mh-tile-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58%;
+  height: 58%;
+  animation: mh-float 4.5s ease-in-out infinite;
+}
+.mh-tile-inner svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 0 4px rgba(0, 194, 255, 0.25));
+}
+
+@keyframes mh-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+
+/* ── Etiqueta de estado (palabra abstracta que rota) ─────────────────── */
+.mh-state-label {
+  position: relative;
+  z-index: 3;
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+.mh-state-pip {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2F80FF;
+  box-shadow: 0 0 8px rgba(47, 128, 255, 0.8);
+  animation: mh-pip 2.1s ease-in-out infinite;
+}
+@keyframes mh-pip {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.3); }
+}
+
+/* ── prefers-reduced-motion ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .mh-tile-inner,
+  .mh-state-pip { animation: none; }
+}
+
+/* No mostrar el hero mobile en desktop */
+@media (min-width: 769px) {
+  .mobile-hero { display: none; }
+}

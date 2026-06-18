@@ -10,6 +10,8 @@ import {
 import { ChevronDown } from 'lucide-react'
 import type { Lang } from '../data/translations'
 import { scrollTo } from '../lib/utils'
+import { MobileHero } from './MobileHero'
+import { ScrollAffordance } from './ScrollAffordance'
 
 type Props = { lang: Lang }
 
@@ -111,7 +113,7 @@ function HeroOverlay({ lang }: { lang: Lang }) {
         </h1>
         <p
           className="text-base sm:text-lg leading-relaxed max-w-xl"
-          style={{ color: 'rgba(255,255,255,0.82)', textShadow: '0 2px 20px rgba(0,0,0,0.5)' }}
+          style={{ color: 'rgba(255,255,255,0.92)', textShadow: '0 2px 20px rgba(0,0,0,0.55)' }}
         >
           {copy.subtitle[lang]}
         </p>
@@ -139,7 +141,7 @@ function HeroOverlay({ lang }: { lang: Lang }) {
             {copy.ctaSecondary[lang]}
           </button>
         </div>
-        <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>
+        <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.78)' }}>
           {copy.microcopy[lang]}
         </p>
       </div>
@@ -203,10 +205,13 @@ export function HeroSequence({ lang }: Props) {
     [0, 1, 1, 0],
   )
   const overlayY = useTransform(scrollYProgress, [INTRO_END + 0.02, INTRO_END + 0.12], [24, 0])
+  // El hint inferior es la señal de scroll principal: fuerte al inicio, se
+  // atenúa al scrollear, vuelve en el HOLD y SIGUE visible durante el cierre
+  // (frames 12→16) para que no se piense que la página termina en el logo.
   const hintOpacity = useTransform(
     scrollYProgress,
-    [0, 0.03, OVERLAY_END - 0.05, OVERLAY_END],
-    [1, 1, 1, 0],
+    [0, 0.03, 0.18, 0.4, 0.5, 0.98, 1],
+    [1, 1, 0.35, 0.35, 1, 1, 0.85],
   )
 
   // Dibuja una imagen cubriendo el canvas (object-fit: cover) con alpha.
@@ -270,9 +275,9 @@ export function HeroSequence({ lang }: Props) {
     }
   }
 
-  // Precarga de los frames de la secuencia.
+  // Precarga de los frames de la secuencia (no en mobile: usa MobileHero).
   useEffect(() => {
-    if (reduced) return
+    if (reduced || isMobile) return
     let mounted = true
     let loaded = 0
     const imgs: HTMLImageElement[] = []
@@ -292,7 +297,7 @@ export function HeroSequence({ lang }: Props) {
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reduced])
+  }, [reduced, isMobile])
 
   // Redibuja según el progreso del scroll.
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
@@ -315,6 +320,9 @@ export function HeroSequence({ lang }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready])
 
+  // Mobile (≤768px): hero propio diseñado desde cero, sin frames del desktop.
+  if (isMobile) return <MobileHero lang={lang} />
+
   if (reduced) return <StaticHero lang={lang} />
 
   const steps = copy.steps[lang]
@@ -335,29 +343,34 @@ export function HeroSequence({ lang }: Props) {
         {/* Capa oscura para legibilidad */}
         <motion.div className="absolute inset-0 pointer-events-none" style={{ background: '#000', opacity: dim }} />
 
+        {/* Señales de scroll: chevrons laterales (el inferior va en el hint) */}
+        <ScrollAffordance progress={scrollYProgress} />
+
         {/* Overlay de texto + CTAs */}
         <motion.div className="absolute inset-0" style={{ opacity: overlayOpacity, y: overlayY }}>
           <HeroOverlay lang={lang} />
         </motion.div>
 
-        {/* Indicador de scroll */}
+        {/* Indicador de scroll inferior (señal principal: cascada de chevrons) */}
         <motion.div
-          className="absolute bottom-7 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 pointer-events-none"
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none"
           style={{ opacity: hintOpacity }}
         >
-          <span className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.85)' }}>
-            {copy.hintTitle[lang]}
-          </span>
-          <span className="text-[11px]" style={{ color: 'rgba(255,255,255,0.55)' }}>
+          <span className="text-sm font-semibold mb-0.5" style={{ color: 'rgba(255,255,255,0.92)', textShadow: '0 1px 12px rgba(0,0,0,0.6)' }}>
             {copy.hintAction[lang]}
           </span>
-          <motion.span
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ color: 'rgba(255,255,255,0.7)' }}
-          >
-            <ChevronDown size={18} />
-          </motion.span>
+          <div className="flex flex-col items-center" style={{ lineHeight: 0.55 }}>
+            {[0, 1, 2].map((i) => (
+              <motion.span
+                key={i}
+                animate={{ y: [0, 7, 0], opacity: [0.4, 1, 0.4] }}
+                transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut', delay: i * 0.18 }}
+                style={{ color: '#00C2FF', filter: 'drop-shadow(0 0 8px rgba(0,194,255,0.65))' }}
+              >
+                <ChevronDown size={26} strokeWidth={2.4} />
+              </motion.span>
+            ))}
+          </div>
         </motion.div>
 
         {/* Indicador de progreso (3 etapas) */}

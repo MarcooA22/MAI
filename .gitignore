@@ -36,3 +36,11 @@ Thumbs.db
 
 # Vite
 .vite/
+
+# Python build venv (no versionar)
+macfer_automatizador/.venv-build/
+__pycache__/
+*.pyc
+
+# Claude memory (local)
+memory/
